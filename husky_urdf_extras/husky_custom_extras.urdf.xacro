@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  
+  <!-- Inclui o plugin de Ground Truth -->
+  <xacro:include filename="$(find lar_gazebo)/husky_urdf_extras/gazebo_ground_truth.urdf" />
+
+  <!-- Inclui o modelo visual da AprilTag -->
+  <xacro:include filename="$(find lar_gazebo)/husky_urdf_extras/apriltag_sensor.urdf" />
+
+</robot>

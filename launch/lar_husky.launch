@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+  <!-- gazebo args -->
+  <arg name="world_name" default="$(find lar_gazebo)/worlds/lar.world"/>
+  <arg name="paused" default="false" doc="Starts gazebo in paused mode" />
+  <arg name="gui" default="true" doc="Starts gazebo gui" />
+  <arg name="hector_slam" default="false" doc="Launch or not hector_slam"/>
+
+  <!-- husky_gazebo args -->
+  <arg name="robot_namespace" default="/"/>
+
+  <!-- Position of Husky -->
+  <arg name="x" default="4.65"/>
+  <arg name="y" default="3.0"/>
+  <arg name="z" default="0.1"/>
+  <arg name="yaw" default="0.0"/>
+
+  <!-- include world launch -->
+  <include file="$(find lar_gazebo)/launch/lar_world.launch">
+    <arg name="world_name" value="$(arg world_name)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="$(arg paused)"/>
+  </include>
+
+  <!-- include husky_gazebo launcher -->
+  <include file="$(find husky_gazebo)/launch/spawn_husky.launch">
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    <arg name="x" value="$(arg x)"/>
+    <arg name="y" value="$(arg y)"/>
+    <arg name="z" value="$(arg z)"/>
+    <arg name="yaw" value="$(arg yaw)"/>
+  </include>
+
+  <!-- ============================================================ -->
+  <!-- CAMERA DE TOPO (Overhead Camera)                             -->
+  <!-- ============================================================ -->
+  <param name="overhead_camera_description" 
+         command="$(find xacro)/xacro '$(find lar_gazebo)/husky_urdf_extras/overhead_camera.urdf.xacro'" />
+
+  <!-- Câmera de Topo reposicionada para abranger mais espaço -->
+  <node name="spawn_overhead_camera" pkg="gazebo_ros" type="spawn_model"
+        args="-urdf -param overhead_camera_description -model overhead_camera -x 6.5 -y 4.0 -z 7.5 -P 1.5708"
+        output="screen" />
+  <!-- ============================================================ -->
+
+  <include if="$(arg hector_slam)" file="$(find lar_gazebo)/launch/hector_slam.launch"/>
+</launch>

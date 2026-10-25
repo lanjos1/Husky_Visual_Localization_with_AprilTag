@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="overhead_camera">
+
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <!-- Inertial obrigatório para o Gazebo processar o link e o sensor -->
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <!-- Torna o modelo totalmente estático (preso no teto, sem cair pela gravidade) -->
+  <gazebo>
+    <static>true</static>
+  </gazebo>
+
+  <!-- Plugin do Gazebo para a câmara ROS -->
+  <gazebo reference="camera_link">
+    <sensor type="camera" name="overhead_camera_sensor">
+      <update_rate>30.0</update_rate>
+      <camera name="overhead">
+        <horizontal_fov>1.35</horizontal_fov> <!-- ~80 graus -->
+        <image>
+          <width>1280</width>
+          <height>720</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>10.0</far>
+        </clip>
+      </camera>
+
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>30.0</updateRate>
+        <cameraName>overhead_camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>
