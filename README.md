@@ -57,11 +57,10 @@ Uma AprilTag (`tag36_11_00000`, 15x15 cm) é fixada na placa superior do Husky. 
 ## Algoritmo passo a passo
 
 1. **Simulação:** o `lar_husky.launch` carrega o mundo, o Husky (com a tag) e a câmera de topo.
-2. **Aquisição:** `tag_pose_estimator.py` assina a imagem da câmera de topo (`/overhead_camera/image_raw`).
+2. **Aquisição:** `pose_validator.py` assina a imagem da câmera de topo (`/overhead_camera/image_raw`) e compara estimativa e ground truth, calcula o erro (RMSE) e gera os gráficos.
 3. **Detecção:** a AprilTag é detectada com a biblioteca `pupil-apriltags`.
 4. **Estimação de pose:** a partir da detecção e dos parâmetros da câmera, é calculada a pose (posição e orientação) da tag e, portanto, do robô.
 5. **Referência:** o ground truth é lido de `/gazebo/model_states`.
-6. **Validação:** `pose_validator.py` compara estimativa e ground truth, calcula o erro (RMSE) e gera os gráficos.
 
 ## Instalação
 
@@ -100,8 +99,6 @@ cd src/lar_gazebo/scripts
 chmod +x pose_validator.py
 ```
 
-> Faça o mesmo para `tag_pose_estimator.py`, se necessário.
-
 ## Execução
 
 Use um terminal para cada passo. Os terminais que executam comandos ROS devem estar dentro do shell interativo (`./scripts/shell.sh`).
@@ -128,7 +125,6 @@ rqt_image_view /overhead_camera/image_raw
 
 ```bash
 cd src/lar_gazebo/scripts
-rosrun lar_gazebo tag_pose_estimator.py
 rosrun lar_gazebo pose_validator.py
 ```
 
