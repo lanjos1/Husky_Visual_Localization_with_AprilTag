@@ -167,10 +167,9 @@ rosbag play teste_trajetoria.bag
 **Observações:**
 
 - O yaw estimado acompanha bem o ground truth, com erros em geral abaixo de 6°. Há picos pontuais de até ~15°.
-- O erro de posição é de ~0,42 m já com o robô parado (0 a ~16 s) e depois oscila entre 0,3 m e 1,0 m. Um offset constante com o robô parado sugere um erro sistemático de calibração (parâmetros intrínsecos/extrínsecos da câmera, altura da câmera ou da tag, ou frame de referência), e não ruído de detecção.
-- A trajetória estimada tem forma parecida com a real, mas deslocada e ampliada. Isso é compatível com erro de escala ou de altura da câmera, já que o erro cresce longe do centro da imagem.
-- No gráfico de yaw, as linhas que oscilam entre ±180° são o *wrapping* do ângulo, não erro real de estimação. Se o cálculo do erro de yaw usa `normalize(est - gt)` (ex.: `atan2(sin(d), cos(d))`), o RMSE de 3,01° está correto.
-- Limitações: dependência de a tag estar visível e sem oclusão, e erro sistemático de posição ainda não corrigido.
+- O erro de posição é de ~0,42 m com o robô parado (0 a ~16 s) e depois oscila entre 0,3 m e 1,0 m. Um offset constante com o robô parado sugere um erro sistemático de calibração (parâmetros intrínsecos/extrínsecos da câmera, altura da câmera ou da tag, ou frame de referência), e não ruído de detecção.
+- A trajetória estimada tem forma parecida com a real, mas deslocada e ampliada. Isso é compatível com erro de escala ou de altura da câmera, porque o erro cresce longe do centro da imagem.
+- Limitações: dependência de a tag estar visível e sem oclusão.
   
 ## Créditos e licença
 
