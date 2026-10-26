@@ -4,6 +4,10 @@ Ferramenta baseada em ROS (Noetic) para **localização global de alta precisão
 
 Uma AprilTag (`tag36_11_00000`, 15x15 cm) é fixada na placa superior do Husky. Uma câmera fixa, posicionada acima do ambiente do laboratório (LaR), detecta a tag e estima a **pose (posição + orientação)** do robô. A estimativa é comparada com o ground truth publicado pelo Gazebo para quantificar o erro.
 
+<p align="center">
+  <img src="images/husky.png" alt="Husky com AprilTag na placa superior, no Gazebo" width="500">
+</p>
+
 > Este repositório é baseado no [lar_gazebo (branch `noetic`)](https://github.com/lar-deeufba/lar_gazebo/tree/noetic), do LaR/UFBA. Os arquivos necessários foram incluídos aqui para que seja possível reproduzir todo o ambiente **sem baixar outro repositório**.
 
 ## Sumário
@@ -18,9 +22,9 @@ Uma AprilTag (`tag36_11_00000`, 15x15 cm) é fixada na placa superior do Husky. 
 - [Resultados](#resultados)
 - [Créditos e licença](#créditos-e-licença)
 
-## Vídeo demonstrativo
+> ## Vídeo demonstrativo
 
-> 🎥 **Link do vídeo:** _[adicionar link aqui]_
+🎥 [Assista ao vídeo demonstrativo](https://drive.google.com/file/d/1SvBjmx_TUE_7cTFdMKdr_Ni-vqec00XJ/view?usp=drivesdk)
 
 ## Estrutura do repositório
 
@@ -153,13 +157,21 @@ rosbag play teste_trajetoria.bag
 
 ## Resultados
 
-> Descreva brevemente aqui os resultados: RMSE de posição (m), erro de orientação (graus), comportamento ao longo da trajetória e limitações observadas.
+![Trajetória, orientação e erros](images/resultado_trajetoria_husky.png)
 
-**Pose e orientação estimadas vs. ground truth, com os respectivos erros:**
+| Métrica | Valor |
+|---|---|
+| RMSE de posição | 0,636 m |
+| RMSE de orientação (yaw) | 3,01° |
 
-<!-- Substituir pelo caminho da imagem quando estiver pronta -->
-![Pose, orientação e erros](docs/resultado_pose_erros.png)
+**Observações:**
 
+- O yaw estimado acompanha bem o ground truth, com erros em geral abaixo de 6°. Há picos pontuais de até ~15°.
+- O erro de posição é de ~0,42 m já com o robô parado (0 a ~16 s) e depois oscila entre 0,3 m e 1,0 m. Um offset constante com o robô parado sugere um erro sistemático de calibração (parâmetros intrínsecos/extrínsecos da câmera, altura da câmera ou da tag, ou frame de referência), e não ruído de detecção.
+- A trajetória estimada tem forma parecida com a real, mas deslocada e ampliada. Isso é compatível com erro de escala ou de altura da câmera, já que o erro cresce longe do centro da imagem.
+- No gráfico de yaw, as linhas que oscilam entre ±180° são o *wrapping* do ângulo, não erro real de estimação. Se o cálculo do erro de yaw usa `normalize(est - gt)` (ex.: `atan2(sin(d), cos(d))`), o RMSE de 3,01° está correto.
+- Limitações: dependência de a tag estar visível e sem oclusão, e erro sistemático de posição ainda não corrigido.
+  
 ## Créditos e licença
 
 - Base do projeto: [lar-deeufba/lar_gazebo (noetic)](https://github.com/lar-deeufba/lar_gazebo/tree/noetic), Laboratório de Robótica (LaR) da UFBA.
